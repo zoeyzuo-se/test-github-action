@@ -1,0 +1,45 @@
+---
+name: closePR
+
+on:  # yamllint disable-line rule:truthy
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  pull_request:
+    types: [ closed ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - id: set_image_tag
+        name: Set image_tag...
+        uses: actions/github-script@v6
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        with:
+          script: |
+            const {PR_NUMBER} = process.env
+            if (PR_NUMBER) {
+              const prTag = `pr${PR_NUMBER}`;
+              console.log(`Setting image_tag=${prTag} for pull_request`);
+              core.setOutput("image_tag", prTag);
+              return;
+            }
+            if ((context.eventName === "push" || context.eventName === "workflow_dispatch")
+            && context.ref === "refs/heads/main") {
+              console.log("Setting image_tag=latest for push to main");
+              core.setOutput("image_tag", "latest");
+              return;
+            }
+            core.error('Failed to set image_tag');
+            console.log(context);
