@@ -30,5 +30,5 @@ jobs:
           PR_NUMBER: ${{ github.event.number }}
         with:
           script: |
-            const script = require('../../scripts/set_tag.js')
+            const script = require('../scripts/set_tag.js')
             console.log(script({github, context}))
