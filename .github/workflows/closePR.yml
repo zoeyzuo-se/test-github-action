@@ -20,6 +20,17 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      
+      - id: get_event_number
+        name: Get event number
+        uses: actions/github-script@v6
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        with:
+          script: |
+            const {PR_NUMBER} = process.env
+            console.log(`PR number=${PR_NUMBER} for pull_request`);
+            core.setOutput("PR number", PR_NUMBER);
 
       - id: set_image_tag
         name: Set image_tag...
