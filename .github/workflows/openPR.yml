@@ -57,3 +57,14 @@ jobs:
             }
             core.error('Failed to set image_tag');
             console.log(context);
+      
+      - id: set_env_var
+        name: Set Env var
+        run: |
+          echo "action_state=yellow" >> $GITHUB_ENV
+          
+      - id: read_env_var
+        name: Read Env Var
+        run: |
+          echo "${{ env.action_state }}"
+      
