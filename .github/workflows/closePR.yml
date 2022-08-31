@@ -54,3 +54,8 @@ jobs:
             }
             core.error('Failed to set image_tag');
             console.log(context);
+            
+      - id: read_env_var
+        name: Read Env Var
+        run: |
+          echo "${{ env.action_state }}"
